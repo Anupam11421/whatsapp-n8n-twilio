@@ -23,17 +23,18 @@ Send commands from WhatsApp, and the bot will process them and return results fr
 ---
 
 ## 📂 Folder Structure
+```
 whatsapp-n8n-twilio/
 │-- workflow.json # Exported n8n workflow
 │-- README.md # Project documentation
 
-
+```
 ---
 
 ## ⚙️ Setup Instructions
 
 1. **Clone the Repository**
-```bash
+
 git clone https://github.com/Anupam11421/whatsapp-n8n-twilio.git
 cd whatsapp-n8n-twilio
 
@@ -54,9 +55,9 @@ Google Drive → Create OAuth credentials & connect account
 4.Test the Workflow
 
 Send message to your Twilio WhatsApp sandbox number
-  ```
+
   LIST /ProjectX
-  ```
+
 Bot will search Google Drive and return matching files/folders.
 
 📅 Roadmap (Next Steps)
