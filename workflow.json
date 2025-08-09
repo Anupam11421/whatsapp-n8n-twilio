@@ -1,0 +1,172 @@
+{
+  "name": "WhatsApp Drive Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "twillio-incoming",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c5c6026e-07ca-43c4-8c87-8afba2e183af",
+      "name": "Webhook",
+      "webhookId": "27eada74-b525-46d3-a579-718f9d11a782"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const input = $json[\"body\"][\"Body\"];\nconst parts = input.trim().split(\" \");\n\nconst command = parts[0].toUpperCase();\nconst path1 = parts[1] || \"\";\nconst path2 = parts[2] || \"\";\n\nreturn {\n  command,\n  path1,\n  path2\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6f3583d9-34bc-4368-a65b-112a888f6f4b",
+      "name": "Command Parser",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "81071c20-b74e-4927-8dc5-61b891e3087c",
+              "leftValue": "={{$json[\"command\"]}}",
+              "rightValue": "LIST",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "eb11d7cb-207a-4230-9181-6d3328bc37d1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{$json[\"path1\"].replace(\"/\", \"\")}}",
+        "returnAll": true,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "681182a2-0649-44df-93ab-278d1bb63320",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "2uWGPmLFBgKNbwu7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "from": "whatsapp:+14155238886",
+        "to": "whatsapp:+917905321798",
+        "message": "hi this is just testing what to next tell me ahead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        832,
+        -96
+      ],
+      "id": "53ccd7be-5692-4493-8057-e400b89b3e3c",
+      "name": "Send an SMS/MMS/WhatsApp message",
+      "credentials": {
+        "twilioApi": {
+          "id": "Gu9TXdepjtuUV51J",
+          "name": "Twilio WhatsApp"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Command Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command Parser": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Send an SMS/MMS/WhatsApp message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "749c81b8-682f-4acd-a7bc-3dafa1c734da",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed40db5b6cf4641ee4f4899872dfdc557ffa1c23b4b4e6583e2bd2bd5bc64603"
+  },
+  "id": "VwfB5ds2CXiII7yC",
+  "tags": []
+}
